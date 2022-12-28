@@ -1,29 +1,3 @@
-# Build the container:
-#
-#       docker build --tag oracle-8 --file Dockerfile.dev .
-#
-# Run the container:
-#
-#       docker run --detach -it --rm -p 2222:22/tcp oracle-8
-#
-# Stop the container:
-#
-#       docker ps
-#       docker stop <container id>
-#
-# Connect to the container using SSH without password:
-#  
-#       chmod 600 data/private.key
-#       ssh -o IdentitiesOnly=yes -o IdentityFile=data/private.key -p 2222 root@localhost
-#       ssh -o IdentitiesOnly=yes -o IdentityFile=data/private.key -p 2222 dev@localhost
-#       ssh -o IdentitiesOnly=yes -o IdentityFile=data/private.key -p 2222 oracle@localhost
-#
-# Connect to the container using SSH with password:
-#
-#       ssh -o IdentitiesOnly=yes -p 2222 root@localhost    (password: root)
-#       ssh -o IdentitiesOnly=yes -p 2222 dev@localhost     (password: dev)
-#       ssh -o IdentitiesOnly=yes -p 2222 oracle@localhost  (password: oracle)
-
 FROM oraclelinux:8
 
 RUN (yum update -y; \
