@@ -27,6 +27,22 @@ docker build --tag oracle-8 .
 
 > Documentation: [docker build](https://docs.docker.com/engine/reference/commandline/build/).
 
+Please, pay attention to the information printed at the end of the installation process (the actual text _will_ differ):
+
+```
+Database creation complete. For details check the logfiles at:
+ /opt/oracle/cfgtoollogs/dbca/XE.
+Database Information:
+Global Database Name:XE
+System Identifier(SID):XE
+Look at the log file "/opt/oracle/cfgtoollogs/dbca/XE/XE.log" for further details.
+
+Connect to Oracle Database using one of the connect strings:
+     Pluggable database: 09bdd15e5f01/XEPDB1
+     Multitenant container database: 09bdd15e5f01
+Use https://localhost:5550/em to access Oracle Enterprise Manager for Oracle Database XE
+```
+
 # Run a new container
 
 Execute the command below:
