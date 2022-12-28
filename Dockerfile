@@ -33,7 +33,6 @@ RUN (dnf group install --with-optional --assumeyes "Development Tools")
 
 RUN (useradd dev)
 RUN (echo 'dev:dev' | chpasswd)
-# RUN (useradd oracle)
 RUN (echo 'oracle:oracle' | chpasswd)
 RUN (echo 'root:root' | chpasswd)
 
