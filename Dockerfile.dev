@@ -49,7 +49,7 @@ RUN (dnf group install --with-optional --assumeyes "Development Tools")
 
 WORKDIR /tmp
 RUN (wget https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1.tar.gz)
-RUN (tar zcvf cmake-3.25.1.tar.gz)
+RUN (tar zxvf cmake-3.25.1.tar.gz)
 WORKDIR /tmp/cmake-3.25.1
 RUN (./bootstrap && gmake && make install)
 WORKDIR /tmp
