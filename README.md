@@ -16,9 +16,13 @@ docker build --tag oracle-8-dev --file Dockerfile.dev .
 ## Starting a container
 
 ```bash
-docker run --detach --interactive --tty --rm \
-       --publish 2222:22/tcp \
-       oracle-8-dev
+docker run --detach \
+           --net=bridge \
+           --interactive \
+           --tty \
+           --rm \
+           --publish 2222:22/tcp \
+           oracle-8-dev
 ```
 
 ## Connecting to the container
@@ -55,18 +59,120 @@ docker ps --filter="ancestor=oracle-8-dev"
 docker stop <container id>
 ```
 
+# Oracle XE 21c database
+
+## Getting the image
+
+```bash
+docker pull gvenzl/oracle-xe:latest
+docker images
+``` 
+
+## Start the database
+
+```bash
+docker run --detach \
+           --net=bridge \
+           --publish 1521:1521 \
+           --env ORACLE_PASSWORD=1234 \
+           --volume oracle-volume:/opt/oracle/oradata \
+           gvenzl/oracle-xe
+```
+
+Example:
+
+```bash
+$ docker run --detach \
+           --net=bridge \
+           --publish 1521:1521 \
+           --env ORACLE_PASSWORD=1234 \
+           --volume oracle-volume:/opt/oracle/oradata \
+           gvenzl/oracle-xe
+d0b3165c854e2803234b5d010e68c05b9570ec111122c388373cbfbfcd6bc765
+$ docker rename d0b3165c854e2803234b5d010e68c05b9570ec111122c388373cbfbfcd6bc765 my-database
+```
+
+## Connect to the database
+
+We will use the container that runs the development environment (image `oracle-8-dev`) to connect to the database (that runs on the other container, which image is `gvenzl/oracle-xe`).
+
+```bash
+$ docker ps
+CONTAINER ID   IMAGE              COMMAND                  CREATED       STATUS       PORTS                                       NAMES
+32b79811e097   oracle-8-dev       "/usr/sbin/sshd -D"      3 hours ago   Up 3 hours   0.0.0.0:2222->22/tcp, :::2222->22/tcp       hungry_sinoussi
+d0b3165c854e   gvenzl/oracle-xe   "container-entrypoin…"   3 hours ago   Up 3 hours   0.0.0.0:1521->1521/tcp, :::1521->1521/tcp   my-database
+```
+
+Get the IP addresses of the containers:
+
+```bash
+$ docker ps
+CONTAINER ID   IMAGE              COMMAND                  CREATED       STATUS       PORTS                                       NAMES
+32b79811e097   oracle-8-dev       "/usr/sbin/sshd -D"      3 hours ago   Up 3 hours   0.0.0.0:2222->22/tcp, :::2222->22/tcp       hungry_sinoussi
+d0b3165c854e   gvenzl/oracle-xe   "container-entrypoin…"   3 hours ago   Up 3 hours   0.0.0.0:1521->1521/tcp, :::1521->1521/tcp   my-database
+$ docker inspect 32b79811e097 | jq '.[0].NetworkSettings.IPAddress'
+"172.17.0.3"
+$ docker inspect d0b3165c854e | jq '.[0].NetworkSettings.IPAddress'
+"172.17.0.2"
+```
+
+Here:
+* the container that runs the development environment has the IP address `172.17.0.3`.
+* the container that runs the database has the IP address `172.17.0.2`.
+
+Now, connect to the container that runs the development environment (using SSH), and execute the following command:
+
+```bash
+$ DB_HOST="172.17.0.2"
+$ sqlplus system/1234@//${DB_HOST}/XEPDB1
+```
+
+It works !
+
 # Docker notes
 
-List the containers:
+Search for an image:
+
+```bash
+$ docker search gvenzl/oracle
+NAME               DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+gvenzl/oracle-xe   Oracle Database XE (21c, 18c, 11g) for every…   145                  
+```
+
+List the images:
 
 ```bash
 docker images
 ``` 
 
+Inspect a container:
+
+```bash
+docker inspect <container id>
+```
+
 Get the list of running containers:
 
 ```bash
 docker ps
+```
+
+Get the list of all containers (including the ones that are stoped):
+
+```bash
+docker ps --all
+```
+
+Delete a container:
+
+```bash
+docker rm <container id>
+```
+
+Delete an image:
+
+```bash
+docker image rm <image id>
 ```
 
 Do not start the Docker service at startup:
@@ -78,4 +184,5 @@ sudo systemctl disable containerd.service
 
 # links
 
-https://hub.docker.com/r/gvenzl/oracle-xe
+* Extra RPM: [https://yum.oracle.com/repo/OracleLinux/OL8/developer/EPEL/x86_64/index.html](https://yum.oracle.com/repo/OracleLinux/OL8/developer/EPEL/x86_64/index.html)
+

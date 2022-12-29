@@ -1,5 +1,13 @@
 FROM oraclelinux:8
 
+# Notes about sqlplus installation:
+#
+#     https://yum.oracle.com/repo/OracleLinux/OL8/oracle/instantclient21/x86_64/
+#     yum search instantclient
+#     oracle-instantclient-release-el8.x86_64 => Oracle Instant Client yum repository configuration
+#     yum search sqlplus
+#     oracle-instantclient-sqlplus.x86_64 => Oracle Instant Client SQL*Plus package
+
 RUN (yum update -y; \
     yum install -y openssh-server \
                    openssh-clients \
@@ -14,7 +22,9 @@ RUN (yum update -y; \
                    file \
                    sudo \
                    less \
+                   oracle-instantclient-release-el8.x86_64 \
                    unzip; \
+    yum install -y oracle-instantclient-sqlplus.x86_64; \
     yum clean all)
 
 # -----------------------------------------------------------------
