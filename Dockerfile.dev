@@ -8,18 +8,21 @@ RUN (yum update -y; \
                    wget \
                    passwd \
                    tar \
-                   net-tools \
-                   oracle-database-preinstall-21c \
-                   file \
                    crontabs \
+                   net-tools \
+                   hostname \
+                   file \
                    sudo \
                    less \
                    unzip; \
-    yum install -y net-tools \
-                   oracle-database-preinstall-21c \
-                   hostname \
-                   file; \
     yum clean all)
+
+# -----------------------------------------------------------------
+# Install "screen"
+# -----------------------------------------------------------------
+
+RUN (wget -O /tmp/screen-4.6.2-12.el8.x86_64.rpm https://yum.oracle.com/repo/OracleLinux/OL8/developer/EPEL/x86_64/getPackage/screen-4.6.2-12.el8.x86_64.rpm)
+RUN (rpm -ivh /tmp/screen-4.6.2-12.el8.x86_64.rpm)
 
 # -----------------------------------------------------------------
 # Install all tools for dev
@@ -33,11 +36,8 @@ RUN (dnf group install --with-optional --assumeyes "Development Tools")
 
 RUN (useradd dev)
 RUN (echo 'dev:dev' | chpasswd)
-RUN (echo 'oracle:oracle' | chpasswd)
 RUN (echo 'root:root' | chpasswd)
-
 RUN (echo "dev   ALL=(ALL)      NOPASSWD: ALL" >> /etc/sudoers)
-RUN (echo "oracle   ALL=(ALL)      NOPASSWD: ALL" >> /etc/sudoers)
 
 # -----------------------------------------------------------------
 # Configure SSH server.
@@ -57,41 +57,19 @@ RUN (chmod a+xr /tmp/install_ssh_keys.sh)
 
 USER dev
 RUN (/tmp/install_ssh_keys.sh)
-USER oracle
-RUN (/tmp/install_ssh_keys.sh)
 USER root
 RUN (/tmp/install_ssh_keys.sh)
-
-# -----------------------------------------------------------------
-# Install Oracle EX
-#
-# Notes:
-#
-# - ORACLE_DOCKER_INSTALL needs to by exported
-#   (export ORACLE_DOCKER_INSTALL=true)
-# - See: https://docs.oracle.com/en/database/oracle/oracle-database/21/xeinl/installing-oracle-database-xe.html#GUID-3F29EE7C-4546-49EE-B894-027EE3E371BF
-# -----------------------------------------------------------------
-
-USER root
-ADD data/oracle-database-xe-21c-1.0-1.ol8.x86_64.rpm /tmp
-ENV ORACLE_DOCKER_INSTALL=true
-RUN (rpm -ivh /tmp/oracle-database-xe-21c-1.0-1.ol8.x86_64.rpm)
-RUN (sed -i "s/^\s*LISTENER_PORT=.*$/LISTENER_PORT=1521/" /etc/sysconfig/oracle-xe-21c.conf)
-RUN (sed -i "s/^\s*EM_EXPRESS_PORT=.*$/EM_EXPRESS_PORT=5550/" /etc/sysconfig/oracle-xe-21c.conf)
-RUN ((echo "root"; echo "root";) | /etc/init.d/oracle-xe-21c configure)
 
 # -----------------------------------------------------------------
 # Clean up
 # -----------------------------------------------------------------
 
-RUN (rm /tmp/install_ssh_keys.sh; \
-     rm /tmp/oracle-database-xe-21c-1.0-1.ol8.x86_64.rpm)
+RUN (rm /tmp/install_ssh_keys.sh)
+RUN (rm /tmp/screen-4.6.2-12.el8.x86_64.rpm)
 
 # -----------------------------------------------------------------
 # Start the SSH daemon.
 # -----------------------------------------------------------------
 
-EXPOSE 22 1521 5550
-
+EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
-
