@@ -1,82 +1,19 @@
 # Oracle XE 21c on a Docker container
 
-This repository contains 2 Dockerfiles.
-* `Dockerfiles.dev`: defines an image that contains all the developer tools (Oracle Linux 8 with SSH access enabled).
-* `Dockerfiles.db`: defines an image that contains the Oracle XE 21c database (Oracle Linux 8 with Oracle XE 21c).
+This repository contains an Oracle development environment in the form of 2 Docker containers.
 
-## Database configuration
+* One container holds an Oracle Linux 8 OS, with all the necessary tools for C programing, and SSH enabled access. It can be used to build applications for Oracle.
+* The other container holds an Oracle XE 21c database. It can be used to test the applications built on the development environment.
 
-The configuration file `/etc/sysconfig/oracle-xe-21c.conf` contains the following configuration:
+# Oracle Linux 8 OS with all the necessary tools for C programing
 
-```
-LISTENER_PORT=1521
-EM_EXPRESS_PORT=5550
-```
-
-The `root` password for the database is "`root`".
-
-# Building the images
-
-## Building the database container
-
-First, download the RPM that performs the installation of Oracle XE 21c [https://www.oracle.com/database/technologies/xe-downloads.html](here). Click on the link "_Oracle Database 21c Express Edition for Linux x64 ( OL8 )_". You will dowload the file "`oracle-database-xe-21c-1.0-1.ol8.x86_64.rpm`". Store this file in the sub-directory [data](data).
-
-Then execute the command below:
-
-```bash
-docker build --tag oracle-8-db --file Dockerfile.db .
-```
-
-> Documentation: [docker build](https://docs.docker.com/engine/reference/commandline/build/).
-
-Please, pay attention to the information printed at the end of the installation process (the actual text _will_ differ):
-
-```
-Database creation complete. For details check the logfiles at:
- /opt/oracle/cfgtoollogs/dbca/XE.
-Database Information:
-Global Database Name:XE
-System Identifier(SID):XE
-Look at the log file "/opt/oracle/cfgtoollogs/dbca/XE/XE.log" for further details.
-
-Connect to Oracle Database using one of the connect strings:
-     Pluggable database: 09bdd15e5f01/XEPDB1
-     Multitenant container database: 09bdd15e5f01
-Use https://localhost:5550/em to access Oracle Enterprise Manager for Oracle Database XE
-```
-
-## Building the developer environment container
-
-Execute the command below:
+## Building the image
 
 ```bash
 docker build --tag oracle-8-dev --file Dockerfile.dev .
 ```
 
-# Run a new container
-
-Documentation: [docker run](https://docs.docker.com/engine/reference/commandline/run/).
-
-* `--detach`: run container in background and print container ID.
-* `--interactive`: keep STDIN open even if not attached.
-* `--tty`: allocate a pseudo-TTY.
-* `--rm`: automatically remove the container when it exits.
-* `--publish`: publish a container's port(s) to the host.
-
-## Start the database container
-
-Execute the command below:
-
-```bash
-docker run --detach --interactive --tty --rm \
-       --publish 1521:1521/tcp \
-       --publish 5550:5550/tcp \
-       oracle-8-db
-```
-
-## Start the the developer environment container
-
-Execute the command below:
+## Starting a container
 
 ```bash
 docker run --detach --interactive --tty --rm \
@@ -84,10 +21,14 @@ docker run --detach --interactive --tty --rm \
        oracle-8-dev
 ```
 
-The OS is configured with 3 UNIX users:
+## Connecting to the container
 
-* `root` (password "`root`").
-* `dev` (password "`dev`").
+The OS is configured with 2 UNIX users:
+
+| user               | password           |
+|--------------------|--------------------|
+| `root`             | `root`             |
+| `dev`              | `dev`              |
 
 SSH connexions using the provided private key [data/private.key](data/private.key):
 
@@ -107,13 +48,11 @@ ssh -o IdentitiesOnly=yes -p 2222 root@localhost
 ssh -o IdentitiesOnly=yes -p 2222 dev@localhost
 ```
 
-# Stop a container
-
-First, find the container's ID. Then stop it.
+## Stop the container
 
 ```bash
-docker ps --filter="ancestor=oracle-8"
-docker stop 1d279bd978ad
+docker ps --filter="ancestor=oracle-8-dev"
+docker stop <container id>
 ```
 
 # Docker notes
@@ -138,7 +77,5 @@ sudo systemctl disable containerd.service
 ```
 
 # links
-
-Documentation: [here](https://docs.oracle.com/en/database/oracle/oracle-database/21/xeinl/starting-and-stopping-oracle-database.html)
 
 https://hub.docker.com/r/gvenzl/oracle-xe
