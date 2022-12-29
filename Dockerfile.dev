@@ -22,6 +22,9 @@ RUN (yum update -y; \
                    file \
                    sudo \
                    less \
+                   dos2unix.x86_64 \
+                   jq.x86_64 \
+                   openssl-devel.x86_64 \
                    oracle-instantclient-release-el8.x86_64 \
                    unzip; \
     yum install -y oracle-instantclient-sqlplus.x86_64; \
@@ -39,6 +42,18 @@ RUN (rpm -ivh /tmp/screen-4.6.2-12.el8.x86_64.rpm)
 # -----------------------------------------------------------------
 
 RUN (dnf group install --with-optional --assumeyes "Development Tools")
+
+# -----------------------------------------------------------------
+# Update CMAKE (required for CLion). Use "cmake --version" to ckeck
+# -----------------------------------------------------------------
+
+WORKDIR /tmp
+RUN (wget https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1.tar.gz)
+RUN (tar zcvf cmake-3.25.1.tar.gz)
+WORKDIR /tmp/cmake-3.25.1
+RUN (./bootstrap && gmake && make install)
+WORKDIR /tmp
+RUN (rm -rf /tmp/cmake-3.25.1 /tmp/cmake-3.25.1.tar.gz)
 
 # -----------------------------------------------------------------
 # Create and configure users.
@@ -63,6 +78,7 @@ RUN (mkdir -p /root/.ssh/; \
      echo "UserKnownHostsFile=/dev/null" >> /root/.ssh/config)
 
 ADD data/install_ssh_keys.sh /tmp
+RUN (dos2unix /tmp/install_ssh_keys.sh)
 RUN (chmod a+xr /tmp/install_ssh_keys.sh)
 
 USER dev
@@ -81,5 +97,6 @@ RUN (rm /tmp/screen-4.6.2-12.el8.x86_64.rpm)
 # Start the SSH daemon.
 # -----------------------------------------------------------------
 
-EXPOSE 22
+# 22 for ssh server. 7777 for gdb server.
+EXPOSE 22 7777
 CMD ["/usr/sbin/sshd", "-D"]

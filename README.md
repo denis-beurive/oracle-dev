@@ -22,8 +22,13 @@ docker run --detach \
            --tty \
            --rm \
            --publish 2222:22/tcp \
+           --publish 7777:7777/tcp \
            oracle-8-dev
 ```
+
+> The equivalent for MS-DOS: [here](doc/start-dev-env.md)
+>
+> You may remane the container: `docker rename <container id> <new name>`
 
 ## Connecting to the container
 
@@ -79,18 +84,9 @@ docker run --detach \
            gvenzl/oracle-xe
 ```
 
-Example:
-
-```bash
-$ docker run --detach \
-           --net=bridge \
-           --publish 1521:1521 \
-           --env ORACLE_PASSWORD=1234 \
-           --volume oracle-volume:/opt/oracle/oradata \
-           gvenzl/oracle-xe
-d0b3165c854e2803234b5d010e68c05b9570ec111122c388373cbfbfcd6bc765
-$ docker rename d0b3165c854e2803234b5d010e68c05b9570ec111122c388373cbfbfcd6bc765 my-database
-```
+> The equivalent for MS-DOS: [here](doc/start-db.md)
+>
+> You may remane the container: `docker rename <container id> <new name>`
 
 ## Connect to the database
 
@@ -123,11 +119,38 @@ Here:
 Now, connect to the container that runs the development environment (using SSH), and execute the following command:
 
 ```bash
-$ DB_HOST="172.17.0.2"
-$ sqlplus system/1234@//${DB_HOST}/XEPDB1
+DB_HOST="172.17.0.2"
+sqlplus system/1234@//${DB_HOST}/XEPDB1
 ```
 
 It works !
+
+# CLION configuration
+
+Open:
+
+`File` -> `Settings...` -> `Build, Execution, Deployment` -> `Toolchains`
+
+Create a new toolchain with the type "Remote host", as shown below:
+
+![](doc/docker-settings-toolchains.png)
+
+And configure the SSH connection:
+
+![](doc/docker-settings-ssh-config.png)
+
+> We chose to use the private key. But it is possible to use the login and the password.
+
+Open:
+
+`File` -> `Settings...` -> `Build, Execution, Deployment` -> `CMake`
+
+Create a new profile (here "Remote debug"). Make sure to select the toolchain we've configured previously ("Docker for Oracle").
+
+![](doc/cmake-settings.png)
+
+
+
 
 # Docker notes
 
@@ -185,4 +208,6 @@ sudo systemctl disable containerd.service
 # links
 
 * Extra RPM: [https://yum.oracle.com/repo/OracleLinux/OL8/developer/EPEL/x86_64/index.html](https://yum.oracle.com/repo/OracleLinux/OL8/developer/EPEL/x86_64/index.html)
+
+
 
