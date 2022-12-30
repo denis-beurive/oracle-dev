@@ -155,7 +155,7 @@ Create a new profile (here "Remote debug"). Make sure to select the toolchain we
 
 ![](doc/cmake-settings.png)
 
-If the configuration is OK, then you should get the following status in the Cmake toolbar:
+If the configuration is OK, then you should get the following status in the CMake toolbar:
 
 ```
 /usr/local/bin/cmake -DCMAKE_BUILD_TYPE=Debug -S /tmp/tmp.Y1gRPS40ZU -B /tmp/tmp.Y1gRPS40ZU/cmake-build-debug-remote
