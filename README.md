@@ -140,6 +140,8 @@ Create a new toolchain with the type "Remote host", as shown below:
 > The version of CMAKE installed by default on Oracle Linux 8 is "`3.20.2`". While this version is OK,
 > we prefer to use a more recent one. At the time of writing CLION supports, at most, the version
 > "`3.24.3`" of CMAKE. This is precisely the version that has been compiled and installed on the image.
+> Please note that the new (compiled) version of CMAKE is intalled under `/usr/local/bin` (the original 
+> one is installed under `/usr/bin`).
 
 And configure the SSH connection:
 
@@ -188,6 +190,39 @@ List the images:
 docker images
 ``` 
 
+Delete an image:
+
+```bash
+docker image rm <image id>
+```
+
+List all dangling images:
+
+```bash
+docker images --filter "dangling=true"
+```
+
+> A dangling image just means that you've created the new build of the image, but it wasn't given a 
+> new name. So the old images you have becomes the "dangling image" ((source)[https://stackoverflow.com/questions/45142528/what-is-a-dangling-image-and-what-is-an-unused-image]). 
+
+Remove all dangling images:
+
+```bash
+docker image prune
+```
+
+Remove all dangling and unused images:
+
+```bash
+docker image prune -a
+```
+
+Inspect an image:
+
+```bash
+docker inspect <image id>
+```
+
 Inspect a container:
 
 ```bash
@@ -210,12 +245,6 @@ Delete a container:
 
 ```bash
 docker rm <container id>
-```
-
-Delete an image:
-
-```bash
-docker image rm <image id>
 ```
 
 Do not start the Docker service at startup:
