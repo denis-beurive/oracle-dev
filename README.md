@@ -1,19 +1,18 @@
-# Oracle XE 21c on a Docker container
+# Oracle XE 21c development environment
 
-This repository contains an Oracle development environment in the form of 2 Docker containers.
+This repository contains an Oracle development environment in the form of an image.
 
-* One container holds an Oracle Linux 8 OS, with all the necessary tools for C programing, and SSH enabled access. It can be used to build applications for Oracle.
-* The other container holds an Oracle XE 21c database. It can be used to test the applications built on the development environment.
+This image contains an Oracle Linux 8 installation, with all the necessary tools for C programing, and SSH enabled access. It can be used to build applications for Oracle.
 
-# Oracle Linux 8 OS with all the necessary tools for C programing
-
-## Building the image
+# Building the image
 
 ```bash
 docker build --tag oracle-8-dev --file Dockerfile.dev .
 ```
 
-## Starting a container
+> [Related commands](doc/docker-images.md)
+
+# Create a container and start it
 
 ```bash
 docker run --detach \
@@ -26,11 +25,11 @@ docker run --detach \
            oracle-8-dev
 ```
 
-> The equivalent for MS-DOS: [here](doc/start-dev-env.md)
+> MS-DOS: [here](doc/start-dev-env.md)
 >
-> You may remane the container: `docker rename <container id> <new name>`
+> [Related commands](doc/docker-containers.md)
 
-## Connecting to the container
+# Connecting to the container
 
 The OS is configured with 2 UNIX users:
 
@@ -57,7 +56,7 @@ ssh -o IdentitiesOnly=yes -p 2222 root@localhost
 ssh -o IdentitiesOnly=yes -p 2222 dev@localhost
 ```
 
-## Stop the container
+# Stop the container
 
 ```bash
 docker ps --filter="ancestor=oracle-8-dev"
@@ -84,9 +83,9 @@ docker run --detach \
            gvenzl/oracle-xe
 ```
 
-> The equivalent for MS-DOS: [here](doc/start-db.md)
+> MS-DOS: [here](doc/start-db.md)
 >
-> You may remane the container: `docker rename <container id> <new name>`
+> [Related commands](doc/docker-containers.md)
 
 ## Connect to the database
 
@@ -106,11 +105,13 @@ $ docker ps
 CONTAINER ID   IMAGE              COMMAND                  CREATED       STATUS       PORTS                                       NAMES
 32b79811e097   oracle-8-dev       "/usr/sbin/sshd -D"      3 hours ago   Up 3 hours   0.0.0.0:2222->22/tcp, :::2222->22/tcp       hungry_sinoussi
 d0b3165c854e   gvenzl/oracle-xe   "container-entrypoin…"   3 hours ago   Up 3 hours   0.0.0.0:1521->1521/tcp, :::1521->1521/tcp   my-database
-$ docker inspect 32b79811e097 | jq '.[0].NetworkSettings.IPAddress'
+$ docker inspect 32b79811e097 | jq ".[0].NetworkSettings.IPAddress"
 "172.17.0.3"
-$ docker inspect d0b3165c854e | jq '.[0].NetworkSettings.IPAddress'
+$ docker inspect d0b3165c854e | jq ".[0].NetworkSettings.IPAddress"
 "172.17.0.2"
 ```
+
+> JQ: [https://stedolan.github.io/jq/download/](https://stedolan.github.io/jq/download/)
 
 Here:
 * the container that runs the development environment has the IP address `172.17.0.3`.
@@ -148,8 +149,6 @@ Open:
 Create a new profile (here "Remote debug"). Make sure to select the toolchain we've configured previously ("Docker for Oracle").
 
 ![](doc/cmake-settings.png)
-
-
 
 
 # Docker notes
