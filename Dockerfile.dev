@@ -26,6 +26,8 @@ RUN (yum update -y; \
                    jq.x86_64 \
                    openssl-devel.x86_64 \
                    oracle-instantclient-release-el8.x86_64 \
+                   which.x86_64 \
+                   tree.x86_64 \
                    unzip; \
     yum install -y oracle-instantclient-sqlplus.x86_64; \
     yum clean all)
@@ -44,16 +46,18 @@ RUN (rpm -ivh /tmp/screen-4.6.2-12.el8.x86_64.rpm)
 RUN (dnf group install --with-optional --assumeyes "Development Tools")
 
 # -----------------------------------------------------------------
-# Update CMAKE (required for CLion). Use "cmake --version" to ckeck
+# Update CMAKE. Use "cmake --version" to ckeck
+# The new version of "cmake" is installed under "/usr/local/bin".
+# The original version will still be under "/usr/bin".
 # -----------------------------------------------------------------
 
 WORKDIR /tmp
-RUN (wget https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1.tar.gz)
-RUN (tar zxvf cmake-3.25.1.tar.gz)
-WORKDIR /tmp/cmake-3.25.1
+RUN (wget https://github.com/Kitware/CMake/releases/download/v3.24.3/cmake-3.24.3.tar.gz)
+RUN (tar zxvf cmake-3.24.3.tar.gz)
+WORKDIR /tmp/cmake-3.24.3
 RUN (./bootstrap && gmake && make install)
 WORKDIR /tmp
-RUN (rm -rf /tmp/cmake-3.25.1 /tmp/cmake-3.25.1.tar.gz)
+RUN (rm -rf /tmp/cmake-3.24.3 cmake-3.24.3.tar.gz)
 
 # -----------------------------------------------------------------
 # Create and configure users.
