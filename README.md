@@ -247,6 +247,34 @@ Delete a container:
 docker rm <container id>
 ```
 
+Override the default executable executed at container startups:
+
+```bash
+docker run --net=bridge \
+           --interactive \
+           --tty \
+           --rm \
+           --publish 222:22/tcp \
+           --publish 777:7777/tcp \
+           --entrypoint="/usr/bin/cmake" \
+           oracle-8-dev "--version"
+
+docker run --net=bridge \
+           --interactive \
+           --tty \
+           --rm \
+           --publish 222:22/tcp \
+           --publish 777:7777/tcp \
+           --entrypoint="/usr/local/bin/cmake" \
+           oracle-8-dev "--version"
+```
+
+> By the way, this is a way to execute some arbitrary command line...
+> Please note: `--entrypoint` accepts only an executable (with no, parameters).
+> The last arguments (here "`--version`") override the `CMD` instruction, and are 
+> appended to the executable specified by `--entrypoint`. Thus, the actual executed
+> commands are `/usr/bin/cmake --version` and `/usr/local/bin/cmake --version`.
+
 Do not start the Docker service at startup:
 
 ```bash
