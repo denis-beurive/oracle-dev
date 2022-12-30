@@ -136,6 +136,11 @@ Create a new toolchain with the type "Remote host", as shown below:
 
 ![](doc/docker-settings-toolchains.png)
 
+> As you can see, we changed the default path to CMAKE, in order to use a newer version of the tool.
+> The version of CMAKE installed by default on Oracle Linux 8 is "`3.20.2`". While this version is OK,
+> we prefer to use a more recent one. At the time of writing CLION supports, at most, the version
+> "`3.24.3`" of CMAKE. This is precisely the version that has been compiled and installed on the image.
+
 And configure the SSH connection:
 
 ![](doc/docker-settings-ssh-config.png)
@@ -150,6 +155,22 @@ Create a new profile (here "Remote debug"). Make sure to select the toolchain we
 
 ![](doc/cmake-settings.png)
 
+If the configuration is OK, then you should get the following status in the Cmake toolbar:
+
+```
+/usr/local/bin/cmake -DCMAKE_BUILD_TYPE=Debug -S /tmp/tmp.Y1gRPS40ZU -B /tmp/tmp.Y1gRPS40ZU/cmake-build-debug-remote
+-- The C compiler identification is GNU 8.5.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /tmp/tmp.Y1gRPS40ZU/cmake-build-debug-remote
+
+[Finished]
+```
 
 # Docker notes
 
