@@ -203,7 +203,7 @@ docker images --filter "dangling=true"
 ```
 
 > A dangling image just means that you've created the new build of the image, but it wasn't given a 
-> new name. So the old images you have becomes the "dangling image" ((source)[https://stackoverflow.com/questions/45142528/what-is-a-dangling-image-and-what-is-an-unused-image]). 
+> new name. So the old images you have becomes the "dangling image" ([source](https://stackoverflow.com/questions/45142528/what-is-a-dangling-image-and-what-is-an-unused-image)). 
 
 Remove all dangling images:
 
