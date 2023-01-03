@@ -5,8 +5,14 @@ FROM oraclelinux:8
 #     https://yum.oracle.com/repo/OracleLinux/OL8/oracle/instantclient21/x86_64/
 #     yum search instantclient
 #     oracle-instantclient-release-el8.x86_64 => Oracle Instant Client yum repository configuration
-#     yum search sqlplus
 #     oracle-instantclient-sqlplus.x86_64 => Oracle Instant Client SQL*Plus package
+#
+# Notes about the C dev environment:
+#
+#     We must install the following packages:
+#     - oracle-instantclient-basic.x86_64
+#     - oracle-instantclient-devel.x86_64
+#     - oracle-instantclient-tools.x86_64
 
 RUN (yum update -y; \
     yum install -y openssh-server \
@@ -28,8 +34,13 @@ RUN (yum update -y; \
                    oracle-instantclient-release-el8.x86_64 \
                    which.x86_64 \
                    tree.x86_64 \
+                   mlocate.x86_64 \
                    unzip; \
-    yum install -y oracle-instantclient-sqlplus.x86_64; \
+    yum install -y libnsl.x86_64 \
+                   oracle-instantclient-basic.x86_64 \
+                   oracle-instantclient-devel.x86_64 \
+                   oracle-instantclient-sqlplus.x86_64 \
+                   oracle-instantclient-tools.x86_64; \
     yum clean all)
 
 # -----------------------------------------------------------------
@@ -91,11 +102,25 @@ USER root
 RUN (/tmp/install_ssh_keys.sh)
 
 # -----------------------------------------------------------------
+# Download ODPI-C
+# -----------------------------------------------------------------
+
+USER dev
+WORKDIR /home/dev
+RUN (wget -O odpci.zip https://github.com/oracle/odpi/archive/refs/heads/main.zip)
+RUN (unzip odpci.zip)
+WORKDIR /home/dev/odpi-main
+RUN (make)
+
+# -----------------------------------------------------------------
 # Clean up
 # -----------------------------------------------------------------
 
+USER root
 RUN (rm /tmp/install_ssh_keys.sh)
 RUN (rm /tmp/screen-4.6.2-12.el8.x86_64.rpm)
+USER dev
+RUN (rm /home/dev/odpci.zip)
 
 # -----------------------------------------------------------------
 # Start the SSH daemon.

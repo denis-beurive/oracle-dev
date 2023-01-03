@@ -282,9 +282,31 @@ sudo systemctl disable docker.service
 sudo systemctl disable containerd.service
 ```
 
+# Yum notes
+
+List the configured repositories:
+
+```bash
+ls -l /etc/yum.repos.d/
+```
+
+Test if packages (here `oracle-instantclient`) are installed:
+
+```bash
+yum list installed oracle-instantclient
+```
+
+Add a repository: [doc](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sec-managing_yum_repositories)
+
+List the content of package(s):
+
+```bash
+repoquery --list oracle-instantclient-basic \
+                 oracle-instantclient-sqlplus \
+                 oracle-instantclient-tools \
+                 oracle-instantclient-devel.x86_64
+```
+
 # links
 
 * Extra RPM: [https://yum.oracle.com/repo/OracleLinux/OL8/developer/EPEL/x86_64/index.html](https://yum.oracle.com/repo/OracleLinux/OL8/developer/EPEL/x86_64/index.html)
-
-
-
