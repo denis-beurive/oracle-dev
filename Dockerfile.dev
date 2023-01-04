@@ -119,7 +119,6 @@ RUN (make)
 USER root
 RUN (rm /tmp/install_ssh_keys.sh)
 RUN (rm /tmp/screen-4.6.2-12.el8.x86_64.rpm)
-USER dev
 RUN (rm /home/dev/odpci.zip)
 
 # -----------------------------------------------------------------
