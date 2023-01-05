@@ -187,7 +187,7 @@ You may experience the following problem while using CLION in remote mode.
 The reason for this error is that CLION did not upload the missing header file from the Docker container.
 You need to synchronise the local copy of the build environment with the one on the container.
 
-![](doc/clion-header-not-found)
+![](doc/clion-header-not-found.png)
 
 > In the screenshot above, CLION cannot find the header file "`curl.h`".
 
