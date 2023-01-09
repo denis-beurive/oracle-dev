@@ -190,7 +190,6 @@ For example:
 ```bash
 $ DB_HOST="172.17.0.2"
 $ sqlplus system/1234@//${DB_HOST}/XEPDB1
-$ sqlplus system/1234@//${DB_HOST}/XEPDB1
 
 SQL*Plus: Release 21.0.0.0.0 - Production on Mon Jan 9 13:56:24 2023
 Version 21.8.0.0.0
