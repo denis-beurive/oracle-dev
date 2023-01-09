@@ -40,6 +40,8 @@ The OS is configured with 2 UNIX users:
 
 SSH connexions using the provided private key [data/private.key](data/private.key):
 
+## From the host that runs the container
+
 ```bash
 ssh -o IdentitiesOnly=yes -o IdentityFile=data/private.key -p 2222 root@localhost
 ssh -o IdentitiesOnly=yes -o IdentityFile=data/private.key -p 2222 dev@localhost
@@ -54,6 +56,52 @@ SSH connexions using UNIX password:
 ```bash
 ssh -o IdentitiesOnly=yes -p 2222 root@localhost
 ssh -o IdentitiesOnly=yes -p 2222 dev@localhost
+```
+
+## From a distant host
+
+We assume that the container is running on a host that runs Ubuntu `22.04`.
+
+> We call "the container's" host the host that runs the container.
+
+```bash
+$ lsb_release -a
+No LSB modules are available.
+Distributor ID:      Ubuntu
+Description:  Ubuntu 22.04.1 LTS
+Release:      22.04
+Codename:     jammy
+```
+
+On the container's host, get the IP address of the interface connected to the local network:
+
+```bash
+ip -f inet addr show $(route | grep '^default' | grep -o '[^ ]*$') | grep -E '^\s+inet\s' | awk '{print $2}'
+```
+
+For example:
+
+```bash
+$ ip -f inet addr show $(route | grep '^default' | grep -o '[^ ]*$') | grep -E '^\s+inet\s' | awk '{print $2}'
+192.168.1.18/24
+```
+
+In this case the IP address of the container's host is `192.168.1.18`.
+
+> You can configure the DHCP server of your Internet router so that this host will always get the same IP address.
+
+Then, if you don't block the port 2222 on the container's host, you can connect from another host:
+
+```bash
+ssh -o IdentitiesOnly=yes -o IdentityFile=data/private.key -p 2222 root@192.168.1.18
+ssh -o IdentitiesOnly=yes -o IdentityFile=data/private.key -p 2222 dev@192.168.1.18
+```
+
+Or:
+
+```bash
+ssh -o IdentitiesOnly=yes -p 2222 root@192.168.1.18
+ssh -o IdentitiesOnly=yes -p 2222 dev@192.168.1.18
 ```
 
 # Stop the container
