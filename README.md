@@ -419,7 +419,7 @@ repoquery --list oracle-instantclient-basic \
 
 # Advenced queuing
 
-* Prepare the database: [here](doc.aq-prepare.md)
+* Prepare the database: [here](doc/aq-prepare.md)
 
 # links
 
