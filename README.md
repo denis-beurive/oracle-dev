@@ -185,6 +185,25 @@ DB_HOST="172.17.0.2"
 sqlplus system/1234@//${DB_HOST}/XEPDB1
 ```
 
+For example:
+
+```bash
+$ DB_HOST="172.17.0.2"
+$ sqlplus system/1234@//${DB_HOST}/XEPDB1
+$ sqlplus system/1234@//${DB_HOST}/XEPDB1
+
+SQL*Plus: Release 21.0.0.0.0 - Production on Mon Jan 9 13:56:24 2023
+Version 21.8.0.0.0
+
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.
+
+Last Successful login time: Thu Dec 29 2022 13:58:08 +00:00
+
+Connected to:
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+```
+
 It works !
 
 # CLION configuration
