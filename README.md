@@ -417,6 +417,10 @@ repoquery --list oracle-instantclient-basic \
                  oracle-instantclient-devel.x86_64
 ```
 
+# Advenced queuing
+
+* Prepare the database: [here](doc.aq-prepare.md)
+
 # links
 
 * Extra RPM: [https://yum.oracle.com/repo/OracleLinux/OL8/developer/EPEL/x86_64/index.html](https://yum.oracle.com/repo/OracleLinux/OL8/developer/EPEL/x86_64/index.html)
