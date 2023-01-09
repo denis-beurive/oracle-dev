@@ -159,7 +159,20 @@ $ docker inspect d0b3165c854e | jq ".[0].NetworkSettings.IPAddress"
 "172.17.0.2"
 ```
 
-> JQ: [https://stedolan.github.io/jq/download/](https://stedolan.github.io/jq/download/)
+Or, with a single line (better for everyday use):
+
+```bash
+docker inspect $(docker ps | grep "gvenzl/oracle-xe" | awk '{print $1}') | jq ".[0].NetworkSettings.IPAddress"
+```
+
+For example:
+
+```bash
+$ docker inspect $(docker ps | grep "gvenzl/oracle-xe" | awk '{print $1}') | jq ".[0].NetworkSettings.IPAddress"
+"172.17.0.3"
+```
+
+> `jq`: [https://stedolan.github.io/jq/download/](https://stedolan.github.io/jq/download/)
 
 Here:
 * the container that runs the development environment has the IP address `172.17.0.3`.
