@@ -42,18 +42,13 @@ sqlplus %DB_USER%/%DB_PASSWORD%@//%DB_HOST%/XEPDB1
 >		XEPDB1
 >
 > A global name refers to the full name of a database (including its domain) which uniquely identifies it from any other database. An example global name might be `FaqDB1.orafaq.com`. 
-> If you do not specify a SERVICE_NAME for a database, the service name will default to the database's global name ([source](https://www.orafaq.com/wiki/Global_name)).
-
-## Get the SID for a given user
-
-Get the name of the SID for the currently connected used:
-
-	SELECT sys_context('USERENV', 'SID') FROM DUAL;
-
-## Get the name of the instance for a given user
-
-Get the name of the instance for the currently connected used:
-
-	SELECT sys_context('userenv','instance_name') FROM dual;
-
+> **If you do not specify a SERVICE_NAME for a database, the service name will default to the database's global name** ([source](https://www.orafaq.com/wiki/Global_name)).
+>
+> Get the name of the SID for the currently connected used:
+>
+>		SELECT sys_context('USERENV', 'SID') FROM DUAL;
+>
+> Get the name of the instance for the currently connected used:
+>
+>		SELECT sys_context('userenv','instance_name') FROM dual;
 
