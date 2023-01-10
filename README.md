@@ -417,7 +417,7 @@ repoquery --list oracle-instantclient-basic \
                  oracle-instantclient-devel.x86_64
 ```
 
-# Advenced queuing
+# Advanced queuing
 
 * Prepare the database: [here](doc/aq-prepare.md)
 
