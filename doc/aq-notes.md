@@ -41,6 +41,36 @@ Make sure that the user has the previously configured roles:
 
 	SELECT * FROM DBA_ROLE_PRIVS WHERE GRANTEE='AQ_ADMIN';
 
+Get data about the user:
+
+```
+column USERNAME format a20;
+column ACCOUNT_STATUS format a20;
+column PASSWORD_VERSIONS format a20;
+select USERNAME,ACCOUNT_STATUS,PASSWORD_VERSIONS from dba_users WHERE USERNAME='AQ_ADMIN';
+```
+
+Output:
+
+```
+USERNAME             ACCOUNT_STATUS       PASSWORD_VERSIONS
+-------------------- -------------------- --------------------
+AQ_ADMIN             OPEN                 11G 12C
+```
+
+Test the connection to the database:
+
+```dos
+SET DB_HOST=192.168.1.18
+SET DB_USER=aq_admin
+SET DB_PASSWORD=password
+sqlplus %DB_USER%/%DB_PASSWORD%@//%DB_HOST%/XEPDB1
+```
+
+> You should adapt the IP address and the command line.
+>
+> See the [notes about SQLPLUS](sqlplus-notes.md).
+
 ### Create the type of data used to represent a message
 
 Connect to the database as `aq_admin` user:
@@ -86,5 +116,46 @@ Execute as `aq_admin` user:
 
 	exec DBMS_AQADM.START_QUEUE('data_queue');
 
-> To stop the queue: `exec DBMS_AQADM.STOP_QUEUE('data_queue');`
+> See [DBMS_AQADM](https://docs.oracle.com/database/121/ARPLS/d_aqadm.htm#ARPLS65306) for details.
+
+### Stop the queue
+
+	exec DBMS_AQADM.STOP_QUEUE('data_queue');
+
+> See [DBMS_AQADM](https://docs.oracle.com/database/121/ARPLS/d_aqadm.htm#ARPLS65306) for details.
+
+### Check whether a queue is running or not
+
+```
+column NAME format a40;
+column enqueue_enabled format a5;
+column dequeue_enabled format a5;
+SELECT name, enqueue_enabled, dequeue_enabled FROM dba_queues;
+```
+
+Or
+
+```
+SELECT name, enqueue_enabled, dequeue_enabled FROM dba_queues WHERE name='DATA_QUEUE';
+```
+
+For example, if the queue is started:
+
+```
+SQL> SELECT name, enqueue_enabled, dequeue_enabled FROM dba_queues WHERE name='DATA_QUEUE';
+
+NAME                                     ENQUE DEQUE
+---------------------------------------- ----- -----
+DATA_QUEUE                                 YES   YES
+```
+
+For example, if the queue is not started:
+
+```
+SQL> SELECT name, enqueue_enabled, dequeue_enabled FROM dba_queues WHERE name='DATA_QUEUE';
+
+NAME                                     ENQUE DEQUE
+---------------------------------------- ----- -----
+DATA_QUEUE                                 NO    NO
+```
 

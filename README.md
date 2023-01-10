@@ -253,6 +253,27 @@ If the configuration is OK, then you should get the following status in the CMak
 [Finished]
 ```
 
+# DataGrip configuration
+
+Connection as user `aq_admin` (password: `password`):
+
+![](doc/datagrip-config1.png)
+
+Connection as user `system` (password: `1234`):
+
+![](doc/datagrip-config2.png)
+
+> SQLPLUS connection string: `<user>/<password>@<host>:<port>/<service>` (ex: `system/1234@172.17.0.3:1521/XEPDB1`).
+>    
+> JDBC URL ([source](https://www.baeldung.com/java-jdbc-url-format)):
+> * `jdbc:oracle:thin:<user>/<password>@//<host>:<port>/<service>` (ex: `jdbc:oracle:thin:system/1521@//192.168.1.18:1521/XEPDB1` or `jdbc:oracle:thin:aq_admin/password@//192.168.1.18:1521/XEPDB1`)
+> * `jdbc:oracle:thin:[<user>/<password>]@<host>[:<port>]:<sid>`
+>
+> Please note that the "service name" is "`XEPDB1`". _In this particular case_, the service name is equal to the "global name" of the database (since no service name has been explicitly set - [source](https://www.orafaq.com/wiki/Global_name)).
+> To get the "global name" of the database (and, thus the "service name", _in this particular case_): `select * from global_name;`.
+>
+> To get the SID (for the currently connected user): `SELECT sys_context('USERENV', 'SID') FROM DUAL;`
+
 # CLION troubleshooting while using the remote mode
 
 ## Header file not found
@@ -417,9 +438,10 @@ repoquery --list oracle-instantclient-basic \
                  oracle-instantclient-devel.x86_64
 ```
 
-# Advanced queuing
+# Extra notes
 
-* Prepare the database: [here](doc/aq-prepare.md)
+* Notes about AQ (Advanced Queuing): [here](doc/aq-notes.md)
+* Notes about SQLPLUS: [here](doc/sqlplus-notes.md)
 
 # links
 
