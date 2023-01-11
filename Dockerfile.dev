@@ -102,7 +102,8 @@ USER root
 RUN (/tmp/install_ssh_keys.sh)
 
 # -----------------------------------------------------------------
-# Download ODPI-C
+# Download ODPI-C, compile and install it. Then configure the
+# dynamic library linker.
 # -----------------------------------------------------------------
 
 USER dev
@@ -111,6 +112,10 @@ RUN (wget -O odpci.zip https://github.com/oracle/odpi/archive/refs/heads/main.zi
 RUN (unzip odpci.zip)
 WORKDIR /home/dev/odpi-main
 RUN (make)
+RUN (make install)
+RUN (echo "/usr/local/lib" > /etc/ld.so.conf.d/odpic.conf)
+RUN (rm -f /etc/ld.so.cache)
+RUN (ldconfig)
 
 # -----------------------------------------------------------------
 # Clean up
