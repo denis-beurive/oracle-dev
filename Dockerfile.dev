@@ -112,6 +112,8 @@ RUN (wget -O odpci.zip https://github.com/oracle/odpi/archive/refs/heads/main.zi
 RUN (unzip odpci.zip)
 WORKDIR /home/dev/odpi-main
 RUN (make)
+
+USER root
 RUN (make install)
 RUN (echo "/usr/local/lib" > /etc/ld.so.conf.d/odpic.conf)
 RUN (rm -f /etc/ld.so.cache)
