@@ -20,6 +20,7 @@ docker run --detach \
            --interactive \
            --tty \
            --rm \
+           --ip=192.17.0.2 \
            --publish 2222:22/tcp \
            --publish 7777:7777/tcp \
            oracle-8-dev
@@ -28,6 +29,8 @@ docker run --detach \
 > MS-DOS: [here](doc/start-dev-env.md)
 >
 > [Related commands](doc/docker-containers.md)
+>
+> Setting IP addresses to the containers is interesting since we don't want to change our configurations every day.
 
 # Connecting to the container
 
@@ -128,6 +131,7 @@ docker run --detach \
            --publish 1521:1521 \
            --env ORACLE_PASSWORD=1234 \
            --volume oracle-volume:/opt/oracle/oradata \
+           --ip=172.17.0.3 \
            gvenzl/oracle-xe
 ```
 
@@ -137,8 +141,11 @@ docker run --detach \
 >
 > [Related commands](doc/docker-containers.md)
 >
+> Setting IP addresses to the containers is interesting since we don't want to change our configurations every day.
+>
 > **TROUBLESHOOTING**
 >
+> * If you cannot connect to the database, make sure that the IP address you are using is correct.
 > * If the container stops right after it started, then rerun the command without the option `--detach`.
 >   This will allow you to consult startup messages.
 > * You may need to delete the volume (`oracle-volume`):
