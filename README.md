@@ -14,13 +14,17 @@ docker build --tag oracle-8-dev --file Dockerfile.dev .
 
 # Create a container and start it
 
+Please note that we create a specific network so that we can assign an IP address to the container (can be interesting).
+
 ```bash
+docker network create oracle-net --subnet=10.11.0.0/16
+
 docker run --detach \
-           --net=bridge \
+           --net=oracle-net \
            --interactive \
            --tty \
            --rm \
-           --ip=192.17.0.2 \
+           --ip=10.11.0.2 \
            --publish 2222:22/tcp \
            --publish 7777:7777/tcp \
            oracle-8-dev
@@ -29,8 +33,6 @@ docker run --detach \
 > MS-DOS: [here](doc/start-dev-env.md)
 >
 > [Related commands](doc/docker-containers.md)
->
-> Setting IP addresses to the containers is interesting since we don't want to change our configurations every day.
 
 # Connecting to the container
 
@@ -125,13 +127,21 @@ docker images
 
 ## Start the database
 
+Please note that:
+* we create a specific network so that we can assign an IP address to the container (can be interesting).
+* you may already have created the network.
+
+
 ```bash
+# Optional (if you haven't created the network yet):
+docker network create oracle-net --subnet=10.11.0.0/16
+
 docker run --detach \
-           --net=bridge \
+           --net=oracle-net \
            --publish 1521:1521 \
            --env ORACLE_PASSWORD=1234 \
            --volume oracle-volume:/opt/oracle/oradata \
-           --ip=172.17.0.3 \
+           --ip=10.11.0.3 \
            gvenzl/oracle-xe
 ```
 
@@ -140,8 +150,6 @@ docker run --detach \
 > MS-DOS: [here](doc/start-db.md)
 >
 > [Related commands](doc/docker-containers.md)
->
-> Setting IP addresses to the containers is interesting since we don't want to change our configurations every day.
 >
 > **TROUBLESHOOTING**
 >
@@ -192,20 +200,20 @@ For example:
 
 ```bash
 $ docker inspect $(docker ps | grep "gvenzl/oracle-xe" | awk '{print $1}') | jq ".[0].NetworkSettings.IPAddress"
-"172.17.0.2"
+"10.11.0.3"
 ```
 
 Now, connect to the container that runs the development environment (using SSH), and execute the following command:
 
 ```bash
-DB_HOST="172.17.0.2"
+DB_HOST="10.11.0.3"
 sqlplus system/1234@//${DB_HOST}/XEPDB1
 ```
 
 For example:
 
 ```bash
-$ DB_HOST="172.17.0.2"
+$ DB_HOST="10.11.0.3"
 $ sqlplus system/1234@//${DB_HOST}/XEPDB1
 
 SQL*Plus: Release 21.0.0.0.0 - Production on Mon Jan 9 13:56:24 2023
@@ -429,6 +437,18 @@ Delete a volume:
 docker volume rm <volume name>
 ```
 
+Get the ID of the "bridge" network:
+
+```bash
+docker network ls --filter "name=bridge" --format "{{.ID}}"
+```
+
+Get the configuration of the "bridge" network:
+
+```bash
+docker network inspect $(docker network ls --filter "name=bridge" --format "{{.ID}}") | jq ".[0].IPAM.Config"
+```
+
 > The name of the volume is given by the value of the option `-v` or `--volume`
 > (ex: `--volume oracle-volume:/opt/oracle/oradata`, the name of the volume is `oracle-volume`).
 
@@ -468,7 +488,7 @@ repoquery --list oracle-instantclient-basic \
 
 * Notes about AQ (Advanced Queuing): [here](doc/aq-notes.md)
 * Notes about SQLPLUS: [here](doc/sqlplus-notes.md)
-* Useful SQL request: [here](doc/requests.md)
+* Useful SQL requests: [here](doc/requests.md)
 
 # links
 
