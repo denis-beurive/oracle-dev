@@ -131,9 +131,19 @@ docker run --detach \
            gvenzl/oracle-xe
 ```
 
+**Warning**: the Docker option `--volume` creates a volume for the container. This way, data is kept throughout container lifecycles. While this is the intended behavior, it may cause troubles.
+
 > MS-DOS: [here](doc/start-db.md)
 >
 > [Related commands](doc/docker-containers.md)
+>
+> **TROUBLESHOOTING**
+>
+> * If the container stops right after it started, then rerun the command without the option `--detach`.
+>   This will allow you to consult startup messages.
+> * You may need to delete the volume (`oracle-volume`):
+>    * First, remove all containers that uses the volume: `docker ps --all`, `docker rm ...`
+>    * Then, remove the volume: `docker volume rm oracle-volume`
 
 ## Connect to the database
 
@@ -405,6 +415,15 @@ docker run --net=bridge \
 > The last arguments (here "`--version`") override the `CMD` instruction, and are 
 > appended to the executable specified by `--entrypoint`. Thus, the actual executed
 > commands are `/usr/bin/cmake --version` and `/usr/local/bin/cmake --version`.
+
+Delete a volume:
+
+```bash
+docker volume rm <volume name>
+```
+
+> The name of the volume is given by the value of the option `-v` or `--volume`
+> (ex: `--volume oracle-volume:/opt/oracle/oradata`, the name of the volume is `oracle-volume`).
 
 Do not start the Docker service at startup:
 
