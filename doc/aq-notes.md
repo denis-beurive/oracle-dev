@@ -2,10 +2,15 @@
 
 ### Create the AQ administrator
 
-Connect to the database as `system` user:
+Connect to the database as `system` user, into the ontainer "`XEPDB1`":
 
 	DB_HOST="..."
 	sqlplus system/1234@//${DB_HOST}/XEPDB1
+
+> Please note that it is very important to connect into the container "`XEPDB1`".
+>
+> If you the session is not associated with the container "`XEPDB1`", then alter it:
+> `alter session set container = XEPDB1`.
 
 Turn off substitution printings:
 
