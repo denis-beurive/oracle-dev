@@ -142,7 +142,7 @@ docker run --detach \
 > * If the container stops right after it started, then rerun the command without the option `--detach`.
 >   This will allow you to consult startup messages.
 > * You may need to delete the volume (`oracle-volume`):
->    * First, remove all containers that uses the volume: `docker ps --all`, `docker rm ...`
+>    * First, remove all containers that use the volume: `docker ps --all`, `docker rm ...`
 >    * Then, remove the volume: `docker volume rm oracle-volume`
 
 ## Connect to the database
