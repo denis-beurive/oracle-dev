@@ -468,6 +468,7 @@ repoquery --list oracle-instantclient-basic \
 
 * Notes about AQ (Advanced Queuing): [here](doc/aq-notes.md)
 * Notes about SQLPLUS: [here](doc/sqlplus-notes.md)
+* Useful SQL request: [hare](doc/requests.md)
 
 # links
 
