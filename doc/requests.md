@@ -48,8 +48,6 @@ Delete a tablespace:
 DROP TABLESPACE CONCERTO_DATA INCLUDING CONTENTS AND DATAFILES;
 ```
 
-ALTER DATABASE DATAFILE concerto_data.dbf OFFLINE DROP;
-
 # Session
 
 Display the active sessions:
