@@ -193,14 +193,7 @@ Here:
 Or, with a single line (better for everyday use):
 
 ```bash
-docker inspect $(docker ps | grep "gvenzl/oracle-xe" | awk '{print $1}') | jq ".[0].NetworkSettings.IPAddress"
-```
-
-For example:
-
-```bash
-$ docker inspect $(docker ps | grep "gvenzl/oracle-xe" | awk '{print $1}') | jq ".[0].NetworkSettings.IPAddress"
-"10.11.0.3"
+docker inspect $(docker ps | grep "gvenzl/oracle-xe" | awk '{print $1}') | jq ".[0].NetworkSettings.Networks"
 ```
 
 Now, connect to the container that runs the development environment (using SSH), and execute the following command:

@@ -63,6 +63,17 @@ DROP TABLESPACE CONCERTO_DATA INCLUDING CONTENTS AND DATAFILES;
 Display the active sessions:
 
 ```sql
-SELECT sid, serial#, status, username FROM v$session WHERE STATUS='ACTIVE' AND USERNAME IS NOT NULL;
+SELECT sid, serial#, status, username
+FROM   v$session 
+WHERE  STATUS='ACTIVE' 
+  AND  USERNAME IS NOT NULL;
+```
+
+# Users
+
+Diplay the list of all users:
+
+```sql
+SELECT * FROM all_users;
 ```
 
