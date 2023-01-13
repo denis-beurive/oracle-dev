@@ -1,3 +1,19 @@
+# Services
+
+Services are used, among other things, during the connection process.
+
+The connection string used by the JDBC Oracle driver is: `jdbc:oracle:thin:@//${DB_HOST}:{DB_PORT}/{SERVICE}`.
+For example: `jdbc:oracle:thin:@//192.168.1.18:1521/xepdb1`.
+
+Display all sevices:
+
+```sql
+# The entire list:
+select SERVICE_NAME "service name", sid "service id" from gv$session;
+# Associated with the current session:
+select SERVICE_NAME from gv$session where sid in (select sid from V$MYSTAT);
+```
+
 # Containers
 
 Display the current container and schema:
