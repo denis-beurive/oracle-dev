@@ -14,17 +14,14 @@ docker build --tag oracle-8-dev --file Dockerfile.dev .
 
 # Create a container and start it
 
-Please note that we create a specific network so that we can assign an IP address to the container (can be interesting).
-
 ```bash
 docker network create oracle-net --subnet=10.11.0.0/16
 
 docker run --detach \
-           --net=oracle-net \
+           --net=bridge \
            --interactive \
            --tty \
            --rm \
-           --ip=10.11.0.2 \
            --publish 2222:22/tcp \
            --publish 7777:7777/tcp \
            oracle-8-dev
@@ -33,6 +30,11 @@ docker run --detach \
 > MS-DOS: [here](doc/start-dev-env.md)
 >
 > [Related commands](doc/docker-containers.md)
+>
+> Please note that we could create a specific network so that we could assign an IP address to the container.
+> (`docker network create oracle-net --subnet=10.11.0.0/16`).
+> However, if we do that, we encounter problems while connecting to the database. For some unknown reason, 
+> the database sends an error message that says: "the database XEPDB1 is not open"
 
 # Connecting to the container
 
@@ -127,21 +129,12 @@ docker images
 
 ## Start the database
 
-Please note that:
-* we create a specific network so that we can assign an IP address to the container (can be interesting).
-* you may already have created the network.
-
-
 ```bash
-# Optional (if you haven't created the network yet):
-docker network create oracle-net --subnet=10.11.0.0/16
-
 docker run --detach \
-           --net=oracle-net \
+           --net=bridge \
            --publish 1521:1521 \
            --env ORACLE_PASSWORD=1234 \
            --volume oracle-volume:/opt/oracle/oradata \
-           --ip=10.11.0.3 \
            gvenzl/oracle-xe
 ```
 
@@ -150,6 +143,11 @@ docker run --detach \
 > MS-DOS: [here](doc/start-db.md)
 >
 > [Related commands](doc/docker-containers.md)
+>
+> Please note that we could create a specific network so that we could assign an IP address to the container
+> (`docker network create oracle-net --subnet=10.11.0.0/16`).
+> However, if we do that, we encounter problems while connecting to the database. For some unknown reason, 
+> the database sends an error message that says: "the database XEPDB1 is not open"
 >
 > **TROUBLESHOOTING**
 >
@@ -179,34 +177,34 @@ CONTAINER ID   IMAGE              COMMAND                  CREATED       STATUS 
 32b79811e097   oracle-8-dev       "/usr/sbin/sshd -D"      3 hours ago   Up 3 hours   0.0.0.0:2222->22/tcp, :::2222->22/tcp       hungry_sinoussi
 d0b3165c854e   gvenzl/oracle-xe   "container-entrypoin…"   3 hours ago   Up 3 hours   0.0.0.0:1521->1521/tcp, :::1521->1521/tcp   my-database
 $ docker inspect 32b79811e097 | jq ".[0].NetworkSettings.IPAddress"
-"172.17.0.3"
-$ docker inspect d0b3165c854e | jq ".[0].NetworkSettings.IPAddress"
 "172.17.0.2"
+$ docker inspect d0b3165c854e | jq ".[0].NetworkSettings.IPAddress"
+"172.17.0.3"
 ```
 
 > `jq`: [https://stedolan.github.io/jq/download/](https://stedolan.github.io/jq/download/)
 
 Here:
-* the container that runs the development environment has the IP address `172.17.0.3`.
-* the container that runs the database has the IP address `172.17.0.2`.
+* the container that runs the development environment has the IP address `172.17.0.2`.
+* the container that runs the database has the IP address `172.17.0.3`.
 
 Or, with a single line (better for everyday use):
 
 ```bash
-docker inspect $(docker ps | grep "gvenzl/oracle-xe" | awk '{print $1}') | jq ".[0].NetworkSettings.Networks"
+docker inspect $(docker ps | grep "gvenzl/oracle-xe" | awk '{print $1}') | jq ".[0].NetworkSettings.IPAddress"
 ```
 
 Now, connect to the container that runs the development environment (using SSH), and execute the following command:
 
 ```bash
-DB_HOST="10.11.0.3"
+DB_HOST="172.17.0.3"
 sqlplus system/1234@//${DB_HOST}/XEPDB1
 ```
 
 For example:
 
 ```bash
-$ DB_HOST="10.11.0.3"
+$ DB_HOST="172.17.0.3"
 $ sqlplus system/1234@//${DB_HOST}/XEPDB1
 
 SQL*Plus: Release 21.0.0.0.0 - Production on Mon Jan 9 13:56:24 2023
