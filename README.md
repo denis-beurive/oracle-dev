@@ -282,10 +282,10 @@ Connection as user `system` (password: `1234`):
 > SQLPLUS connection string: `<user>/<password>@<host>:<port>/<service>` (ex: `system/1234@172.17.0.3:1521/XEPDB1`).
 >    
 > JDBC URL ([source](https://www.baeldung.com/java-jdbc-url-format)):
-> * `jdbc:oracle:thin:<user>/<password>@//<host>:<port>/<service>` (ex: `jdbc:oracle:thin:system/1521@//192.168.1.18:1521/XEPDB1`)
+> * `jdbc:oracle:thin:<user>/<password>@//<host>:<port>/<service>` (ex: `jdbc:oracle:thin:system/1521@//192.168.1.18:1521/xepdb1`)
 > * `jdbc:oracle:thin:[<user>/<password>]@<host>[:<port>]:<sid>`
 >
-> Please note that the "service name" is "`XEPDB1`". _In this particular case_, the service name is equal to the "global name" of the database (since no service name has been explicitly set - [source](https://www.orafaq.com/wiki/Global_name)).
+> Please note that the "service name" is "`xepdb1`". _In this particular case_, the service name is equal to the "global name" of the database (since no service name has been explicitly set - [source](https://www.orafaq.com/wiki/Global_name)).
 > To get the "global name" of the database (and, thus the "service name", _in this particular case_): `select * from global_name;`.
 >
 > To get the SID (for the currently connected user): `SELECT sys_context('USERENV', 'SID') FROM DUAL;`
